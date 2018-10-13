@@ -1,17 +1,12 @@
 package main
 
-import (
-	"os"
-	"os/user"
-)
-
-func initialize() (err error) {
-	user, err := user.Current()
+func initialize() error {
+	baseDir, err := getBaseDir()
 	if err != nil {
 		return err
 	}
 
-	if err := os.MkdirAll(user.HomeDir+"/.nd", 0755); err != nil {
+	if err := prepareDir(baseDir); err != nil {
 		return err
 	}
 
