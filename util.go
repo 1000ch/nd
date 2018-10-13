@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/user"
 	"path/filepath"
+	"regexp"
 )
 
 func getBaseDir() (string, error) {
@@ -43,4 +45,34 @@ func prepareDir(p string) error {
 	}
 
 	return nil
+}
+
+func normalizeVersion(version string) string {
+	normalized := regexp.MustCompile(`v\d+.\d+.\d+`)
+
+	if normalized.MatchString(version) {
+		return version
+	}
+
+	number1 := regexp.MustCompile(`\d+.\d+.\d+`)
+	number2 := regexp.MustCompile(`\d+.\d+`)
+	number3 := regexp.MustCompile(`\d+`)
+
+	if number1.MatchString(version) {
+		return fmt.Sprintf("v%s", version)
+	}
+
+	if number2.MatchString(version) {
+		return fmt.Sprintf("v%s.0", version)
+	}
+
+	if number3.MatchString(version) {
+		return fmt.Sprintf("v%s.0.0", version)
+	}
+
+	return version
+}
+
+func normalizeArch(goarch string) string {
+	return "x64"
 }
