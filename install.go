@@ -7,9 +7,7 @@ import (
 	"github.com/google/subcommands"
 )
 
-type installCommand struct {
-	source bool
-}
+type installCommand struct{}
 
 func (*installCommand) Name() string {
 	return "install"
@@ -20,13 +18,16 @@ func (*installCommand) Synopsis() string {
 }
 
 func (*installCommand) Usage() string {
-	return `install [-source] <version>: Install Node.js.`
+	return `install <version>: Install Node.js.`
 }
 
-func (i *installCommand) SetFlags(f *flag.FlagSet) {
-	f.BoolVar(&i.source, "source", false, "compile from source")
-}
+func (i *installCommand) SetFlags(f *flag.FlagSet) {}
 
 func (i *installCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
+	err := initialize()
+	if err != nil {
+		return subcommands.ExitFailure
+	}
+
 	return subcommands.ExitSuccess
 }

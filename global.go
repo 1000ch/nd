@@ -26,5 +26,10 @@ func (*globalCommand) Usage() string {
 func (i *globalCommand) SetFlags(f *flag.FlagSet) {}
 
 func (i *globalCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
+	err := initialize()
+	if err != nil {
+		return subcommands.ExitFailure
+	}
+
 	return subcommands.ExitSuccess
 }
