@@ -20,7 +20,7 @@ func (*uninstallCommand) Synopsis() string {
 }
 
 func (*uninstallCommand) Usage() string {
-	return `uninstall <version>: Uninstall Node.js.`
+	return `uninstall <version>: Uninstall Node.js <version>`
 }
 
 func (i *uninstallCommand) SetFlags(f *flag.FlagSet) {}

@@ -27,7 +27,7 @@ func (*installCommand) Synopsis() string {
 }
 
 func (*installCommand) Usage() string {
-	return `install <version>: Install Node.js.`
+	return `install <version>: Install Node.js <version>`
 }
 
 func (i *installCommand) SetFlags(f *flag.FlagSet) {}
