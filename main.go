@@ -15,6 +15,7 @@ func main() {
 	subcommands.Register(&installCommand{}, "")
 	subcommands.Register(&uninstallCommand{}, "")
 	subcommands.Register(&globalCommand{}, "")
+	subcommands.Register(&versionsCommand{}, "")
 
 	flag.Parse()
 	ctx := context.Background()
