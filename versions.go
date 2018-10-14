@@ -27,16 +27,6 @@ func (*versionsCommand) Usage() string {
 func (i *versionsCommand) SetFlags(f *flag.FlagSet) {}
 
 func (i *versionsCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
-	err := initialize()
-	if err != nil {
-		return subcommands.ExitFailure
-	}
-
-	versionsDir, err := getVersionsDir()
-	if err != nil {
-		return subcommands.ExitFailure
-	}
-
 	files, err := ioutil.ReadDir(versionsDir)
 	if err != nil {
 		return subcommands.ExitFailure
@@ -54,11 +44,13 @@ func (i *versionsCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...inter
 }
 
 func filter(fis []os.FileInfo, f func(os.FileInfo) bool) []os.FileInfo {
-	filteredFis := make([]os.FileInfo, 0)
+	filtered := make([]os.FileInfo, 0)
+
 	for _, fi := range fis {
 		if f(fi) {
-			filteredFis = append(filteredFis, fi)
+			filtered = append(filtered, fi)
 		}
 	}
-	return filteredFis
+
+	return filtered
 }

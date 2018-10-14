@@ -6,33 +6,17 @@ import (
 	"os/user"
 	"path/filepath"
 	"regexp"
+
+	"github.com/golang/glog"
 )
 
-func getBaseDir() (string, error) {
+func getBaseDir() string {
 	user, err := user.Current()
 	if err != nil {
-		return "", err
+		glog.Error(err)
 	}
 
-	return filepath.Join(user.HomeDir, ".nd"), nil
-}
-
-func getVersionsDir() (string, error) {
-	baseDir, err := getBaseDir()
-	if err != nil {
-		return "", err
-	}
-
-	return filepath.Join(baseDir, "versions"), nil
-}
-
-func getBinaryDir() (string, error) {
-	baseDir, err := getBaseDir()
-	if err != nil {
-		return "", err
-	}
-
-	return filepath.Join(baseDir, "bin"), nil
+	return filepath.Join(user.HomeDir, ".nd")
 }
 
 func prepareDir(p string) error {

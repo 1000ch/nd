@@ -33,11 +33,6 @@ func (*installCommand) Usage() string {
 func (i *installCommand) SetFlags(f *flag.FlagSet) {}
 
 func (i *installCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
-	err := initialize()
-	if err != nil {
-		return subcommands.ExitFailure
-	}
-
 	args := f.Args()
 	if len(args) != 1 {
 		return subcommands.ExitFailure
@@ -46,22 +41,21 @@ func (i *installCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interf
 	version := normalizeVersion(args[0])
 	platform := runtime.GOOS
 	arch := normalizeArch(runtime.GOARCH)
-
-	versionsDir, err := getVersionsDir()
-	if err != nil {
-		return subcommands.ExitSuccess
-	}
-
 	targetDir := filepath.Join(versionsDir, version)
 	if err := prepareDir(targetDir); err != nil {
-		return subcommands.ExitSuccess
+		return subcommands.ExitFailure
 	}
 
 	fileName := fmt.Sprintf("node-%s-%s-%s.tar.gz", version, platform, arch)
 	url := fmt.Sprintf("https://nodejs.org/dist/%s/%s", version, fileName)
 
-	download(url, targetDir, fileName)
-	unarchive(targetDir, fileName)
+	if err := download(url, targetDir, fileName); err != nil {
+		return subcommands.ExitFailure
+	}
+
+	if err := unarchive(targetDir, fileName); err != nil {
+		return subcommands.ExitFailure
+	}
 
 	return subcommands.ExitSuccess
 }
@@ -130,18 +124,18 @@ func unarchive(targetDir string, fileName string) error {
 		case tar.TypeDir:
 			err = os.MkdirAll(targetPath, fileMode)
 			if err != nil {
-				fmt.Println(err)
+				return err
 			}
 		case tar.TypeReg:
 			writer, err := os.Create(targetPath)
 			if err != nil {
-				fmt.Println(err)
+				return err
 			}
 			io.Copy(writer, tarReader)
 
 			err = os.Chmod(targetPath, fileMode)
 			if err != nil {
-				fmt.Println(err)
+				return err
 			}
 
 			writer.Close()
