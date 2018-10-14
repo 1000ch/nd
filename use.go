@@ -9,25 +9,25 @@ import (
 	"github.com/google/subcommands"
 )
 
-type globalCommand struct {
+type useCommand struct {
 	source bool
 }
 
-func (*globalCommand) Name() string {
-	return "global"
+func (*useCommand) Name() string {
+	return "use"
 }
 
-func (*globalCommand) Synopsis() string {
-	return "Set specified version to global"
+func (*useCommand) Synopsis() string {
+	return "Activate specified Node.js"
 }
 
-func (*globalCommand) Usage() string {
-	return `global <version>: Set specified version to global.`
+func (*useCommand) Usage() string {
+	return `use <version>: Activate Node.js <version>`
 }
 
-func (i *globalCommand) SetFlags(f *flag.FlagSet) {}
+func (i *useCommand) SetFlags(f *flag.FlagSet) {}
 
-func (i *globalCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
+func (i *useCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
 	args := f.Args()
 	if len(args) != 1 {
 		return subcommands.ExitFailure

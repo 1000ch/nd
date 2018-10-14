@@ -39,7 +39,7 @@ func main() {
 	subcommands.Register(subcommands.CommandsCommand(), "")
 	subcommands.Register(&installCommand{}, "")
 	subcommands.Register(&uninstallCommand{}, "")
-	subcommands.Register(&globalCommand{}, "")
+	subcommands.Register(&useCommand{}, "")
 	subcommands.Register(&versionsCommand{}, "")
 
 	flag.Parse()
