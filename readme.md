@@ -1,5 +1,21 @@
 # nd
 
+Node.js version manager.
+
+## Install
+
+Install via `go` command.
+
+```sh
+$ go get github.com/1000ch/nd
+```
+
+Configure `PATH` in your `.bashrc` or `.zshrc`, etc.
+
+```sh
+export PATH=$HOME/.nd/bin:$PATH
+```
+
 ## Usage
 
 ### `nd install <version>`
