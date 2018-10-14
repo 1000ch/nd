@@ -136,6 +136,8 @@ func unarchive(targetDir string, fileName string) error {
 				return err
 			}
 		case tar.TypeReg:
+		case tar.TypeLink:
+		case tar.TypeSymlink:
 			writer, err := os.Create(targetPath)
 			if err != nil {
 				return err
