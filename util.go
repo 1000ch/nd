@@ -40,7 +40,6 @@ func normalizeVersion(version string) string {
 
 	number1 := regexp.MustCompile(`\d+.\d+.\d+`)
 	number2 := regexp.MustCompile(`\d+.\d+`)
-	number3 := regexp.MustCompile(`\d+`)
 
 	if number1.MatchString(version) {
 		return fmt.Sprintf("v%s", version)
@@ -50,13 +49,20 @@ func normalizeVersion(version string) string {
 		return fmt.Sprintf("v%s.0", version)
 	}
 
-	if number3.MatchString(version) {
-		return fmt.Sprintf("v%s.0.0", version)
-	}
-
 	return version
 }
 
 func normalizeArch(goarch string) string {
-	return "x64"
+	x64 := regexp.MustCompile(`amd64|arm64`)
+	x86 := regexp.MustCompile(`386|arm|amd64p32`)
+
+	if x64.MatchString(goarch) {
+		return "x64"
+	}
+
+	if x86.MatchString(goarch) {
+		return "x86"
+	}
+
+	return ""
 }
