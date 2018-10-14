@@ -12,7 +12,9 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/google/subcommands"
 )
 
@@ -49,13 +51,20 @@ func (i *installCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interf
 	fileName := fmt.Sprintf("node-%s-%s-%s.tar.gz", version, platform, arch)
 	url := fmt.Sprintf("https://nodejs.org/dist/%s/%s", version, fileName)
 
+	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+	s.Suffix = fmt.Sprintf(" Downloading Node.js %s", version)
+	s.Start()
 	if err := download(url, targetDir, fileName); err != nil {
 		return subcommands.ExitFailure
 	}
+	s.Stop()
 
+	s.Suffix = fmt.Sprintf(" Extracting Node.js %s", version)
+	s.Start()
 	if err := unarchive(targetDir, fileName); err != nil {
 		return subcommands.ExitFailure
 	}
+	s.Stop()
 
 	return subcommands.ExitSuccess
 }
