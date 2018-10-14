@@ -38,7 +38,12 @@ func (i *installCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interf
 		return subcommands.ExitFailure
 	}
 
-	version := normalizeVersion("10.10.0")
+	args := f.Args()
+	if len(args) != 1 {
+		return subcommands.ExitFailure
+	}
+
+	version := normalizeVersion(args[0])
 	platform := runtime.GOOS
 	arch := normalizeArch(runtime.GOARCH)
 
