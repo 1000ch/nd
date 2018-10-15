@@ -80,12 +80,8 @@ func download(url string, targetDir string, fileName string) error {
 	}
 	tarReader := tar.NewReader(gzipReader)
 
-	var header *tar.Header
-	var targetPath string
-	var fileMode os.FileMode
-	var separator = string(os.PathSeparator)
 	for {
-		header, err = tarReader.Next()
+		header, err := tarReader.Next()
 		if err == io.EOF {
 			break
 		}
@@ -93,9 +89,10 @@ func download(url string, targetDir string, fileName string) error {
 			return err
 		}
 
+		separator := string(os.PathSeparator)
 		pathList := strings.Split(header.Name, separator)[1:]
-		targetPath = filepath.Join(targetDir, strings.Join(pathList, separator))
-		fileMode = os.FileMode(header.Mode)
+		targetPath := filepath.Join(targetDir, strings.Join(pathList, separator))
+		fileMode := os.FileMode(header.Mode)
 
 		switch header.Typeflag {
 		case tar.TypeDir:
