@@ -10,23 +10,24 @@ import (
 	"github.com/google/subcommands"
 )
 
-type versionsCommand struct{}
-
-func (*versionsCommand) Name() string {
-	return "versions"
+type listCommand struct {
 }
 
-func (*versionsCommand) Synopsis() string {
+func (*listCommand) Name() string {
+	return "list"
+}
+
+func (*listCommand) Synopsis() string {
 	return "Show installed Node.js versions"
 }
 
-func (*versionsCommand) Usage() string {
-	return `versions: Show installed Node.js versions`
+func (*listCommand) Usage() string {
+	return `list: Show installed Node.js versions`
 }
 
-func (i *versionsCommand) SetFlags(f *flag.FlagSet) {}
+func (i *listCommand) SetFlags(f *flag.FlagSet) {}
 
-func (i *versionsCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
+func (i *listCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
 	files, err := ioutil.ReadDir(versionsDir)
 	if err != nil {
 		return subcommands.ExitFailure

@@ -49,7 +49,8 @@ func main() {
 	subcommands.Register(&installCommand{}, "")
 	subcommands.Register(&uninstallCommand{}, "")
 	subcommands.Register(&useCommand{}, "")
-	subcommands.Register(&versionsCommand{}, "")
+	subcommands.Register(&listCommand{}, "")
+	subcommands.Register(subcommands.Alias("ls", &listCommand{}), "")
 
 	flag.Parse()
 	ctx := context.Background()

@@ -30,7 +30,7 @@ Uninstall Node.js <version>.
 
 Activate Node.js <version>.
 
-### `nd versions`
+### `nd list`
 
 Show installed Node.js versions.
 
