@@ -59,27 +59,10 @@ func (i *installCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interf
 	}
 	s.Stop()
 
-	s.Suffix = fmt.Sprintf(" Extracting Node.js %s", version)
-	s.Start()
-	if err := unarchive(targetDir, fileName); err != nil {
-		return subcommands.ExitFailure
-	}
-	s.Stop()
-
 	return subcommands.ExitSuccess
 }
 
 func download(url string, targetDir string, fileName string) error {
-	distPath := filepath.Join(targetDir, fileName)
-
-	file, err := os.Create(distPath)
-	if file != nil {
-		defer file.Close()
-	}
-	if err != nil {
-		return err
-	}
-
 	response, err := http.Get(url)
 	if response != nil {
 		defer response.Body.Close()
@@ -88,22 +71,7 @@ func download(url string, targetDir string, fileName string) error {
 		return err
 	}
 
-	_, err = io.Copy(file, response.Body)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func unarchive(targetDir string, fileName string) error {
-	distPath := filepath.Join(targetDir, fileName)
-	file, err := os.Open(distPath)
-	if err != nil {
-		return err
-	}
-
-	gzipReader, err := gzip.NewReader(file)
+	gzipReader, err := gzip.NewReader(response.Body)
 	if gzipReader != nil {
 		defer gzipReader.Close()
 	}
@@ -151,10 +119,6 @@ func unarchive(targetDir string, fileName string) error {
 		default:
 			fmt.Printf("Unable to untar type: %c in file %s", header.Typeflag, header.Name)
 		}
-	}
-
-	if err := os.Remove(distPath); err != nil {
-		return err
 	}
 
 	return nil
