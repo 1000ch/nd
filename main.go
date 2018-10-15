@@ -11,6 +11,7 @@ import (
 	"github.com/mitchellh/go-homedir"
 )
 
+var version string
 var baseDir string
 var binaryDir string
 var versionsDir string
@@ -46,11 +47,12 @@ func main() {
 	subcommands.Register(subcommands.HelpCommand(), "")
 	subcommands.Register(subcommands.FlagsCommand(), "")
 	subcommands.Register(subcommands.CommandsCommand(), "")
+	subcommands.Register(subcommands.Alias("ls", &listCommand{}), "")
 	subcommands.Register(&installCommand{}, "")
 	subcommands.Register(&uninstallCommand{}, "")
 	subcommands.Register(&useCommand{}, "")
 	subcommands.Register(&listCommand{}, "")
-	subcommands.Register(subcommands.Alias("ls", &listCommand{}), "")
+	subcommands.Register(&versionCommand{}, "")
 
 	flag.Parse()
 	ctx := context.Background()
