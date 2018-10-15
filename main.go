@@ -8,14 +8,21 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/google/subcommands"
+	"github.com/mitchellh/go-homedir"
 )
 
 var baseDir string
 var binaryDir string
 var versionsDir string
 
-func main() {
-	baseDir = getBaseDir()
+func init() {
+	homeDir, err := homedir.Dir()
+	if err != nil {
+		glog.Error(err)
+		os.Exit(1)
+	}
+
+	baseDir = filepath.Join(homeDir, ".nd")
 	binaryDir = filepath.Join(baseDir, "bin")
 	versionsDir = filepath.Join(baseDir, "versions")
 
@@ -33,7 +40,9 @@ func main() {
 		glog.Error(err)
 		os.Exit(1)
 	}
+}
 
+func main() {
 	subcommands.Register(subcommands.HelpCommand(), "")
 	subcommands.Register(subcommands.FlagsCommand(), "")
 	subcommands.Register(subcommands.CommandsCommand(), "")

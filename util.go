@@ -3,21 +3,15 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"regexp"
 	"strings"
-
-	"github.com/golang/glog"
-	"github.com/mitchellh/go-homedir"
 )
 
-func getBaseDir() string {
-	dir, err := homedir.Dir()
-	if err != nil {
-		glog.Error(err)
-	}
+var semver1, semver2 *regexp.Regexp
 
-	return filepath.Join(dir, ".nd")
+func init() {
+	semver1 = regexp.MustCompile(`\d+.\d+.\d+`)
+	semver2 = regexp.MustCompile(`\d+.\d+`)
 }
 
 func prepareDir(p string) error {
@@ -33,18 +27,11 @@ func prepareDir(p string) error {
 }
 
 func normalizeVersion(version string) string {
-	number1, err1 := regexp.Compile(`\d+.\d+.\d+`)
-	number2, err2 := regexp.Compile(`\d+.\d+`)
-
-	if err1 != nil || err2 != nil {
-		return version
-	}
-
-	if number1.MatchString(version) {
+	if semver1.MatchString(version) {
 		return fmt.Sprintf("v%s", version)
 	}
 
-	if number2.MatchString(version) {
+	if semver2.MatchString(version) {
 		return fmt.Sprintf("v%s.0", version)
 	}
 
