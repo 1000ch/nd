@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 
 	"github.com/golang/glog"
 	"github.com/mitchellh/go-homedir"
@@ -53,14 +54,14 @@ func normalizeVersion(version string) string {
 }
 
 func normalizeArch(goarch string) string {
-	x64 := regexp.MustCompile(`amd64|arm64`)
-	x86 := regexp.MustCompile(`386|arm|amd64p32`)
-
-	if x64.MatchString(goarch) {
+	if strings.Contains(goarch, "arm64") ||
+		strings.Contains(goarch, "amd64") {
 		return "x64"
 	}
 
-	if x86.MatchString(goarch) {
+	if strings.Contains(goarch, "386") ||
+		strings.Contains(goarch, "arm") ||
+		strings.Contains(goarch, "amd64p32") {
 		return "x86"
 	}
 
