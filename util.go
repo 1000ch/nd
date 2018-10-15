@@ -3,20 +3,20 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/user"
 	"path/filepath"
 	"regexp"
 
 	"github.com/golang/glog"
+	"github.com/mitchellh/go-homedir"
 )
 
 func getBaseDir() string {
-	user, err := user.Current()
+	dir, err := homedir.Dir()
 	if err != nil {
 		glog.Error(err)
 	}
 
-	return filepath.Join(user.HomeDir, ".nd")
+	return filepath.Join(dir, ".nd")
 }
 
 func prepareDir(p string) error {
