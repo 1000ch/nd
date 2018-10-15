@@ -33,14 +33,12 @@ func prepareDir(p string) error {
 }
 
 func normalizeVersion(version string) string {
-	normalized := regexp.MustCompile(`v\d+.\d+.\d+`)
+	number1, err1 := regexp.Compile(`\d+.\d+.\d+`)
+	number2, err2 := regexp.Compile(`\d+.\d+`)
 
-	if normalized.MatchString(version) {
+	if err1 != nil || err2 != nil {
 		return version
 	}
-
-	number1 := regexp.MustCompile(`\d+.\d+.\d+`)
-	number2 := regexp.MustCompile(`\d+.\d+`)
 
 	if number1.MatchString(version) {
 		return fmt.Sprintf("v%s", version)
