@@ -6,8 +6,8 @@ prepare:
 	mkdir nd_darwin_amd64
 
 build:
-	env GOOS=darwin GOARCH=386 go build -ldflags="-X main.version=$(shell gov)" -o nd_darwin_386/nd
-	env GOOS=darwin GOARCH=amd64 go build -ldflags="-X main.version=$(shell gov)" -o nd_darwin_amd64/nd
+	env GOOS=darwin GOARCH=386 go build -ldflags="-s -w -X main.version=$(shell gov)" -o nd_darwin_386/nd
+	env GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w -X main.version=$(shell gov)" -o nd_darwin_amd64/nd
 
 zip:
 	zip nd_darwin_386.zip -r nd_darwin_386
