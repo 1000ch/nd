@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"os"
 
 	"github.com/google/subcommands"
 )
@@ -33,25 +32,17 @@ func (i *listCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface
 		return subcommands.ExitFailure
 	}
 
-	dirs := filter(files, func(fi os.FileInfo) bool {
-		return fi.IsDir()
-	})
-
-	for _, d := range dirs {
-		fmt.Println(d.Name())
-	}
-
-	return subcommands.ExitSuccess
-}
-
-func filter(fis []os.FileInfo, f func(os.FileInfo) bool) []os.FileInfo {
-	filtered := make([]os.FileInfo, 0)
-
-	for _, fi := range fis {
-		if f(fi) {
-			filtered = append(filtered, fi)
+	versions := make([]string, 0)
+	for _, file := range files {
+		if file.IsDir() {
+			versions = append(versions, file.Name())
 		}
 	}
 
-	return filtered
+	semvers := normalizeVersions(versions)
+	for _, v := range semvers {
+		fmt.Println(v)
+	}
+
+	return subcommands.ExitSuccess
 }
