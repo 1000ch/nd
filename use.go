@@ -33,7 +33,7 @@ func (i *useCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{
 		return subcommands.ExitFailure
 	}
 
-	version := normalizeVersion(args[0])
+	version := normalizeVersion(args[0]).String()
 	symlinkTarget := filepath.Join(versionsDir, version, "bin", "node")
 	symlinkPath := filepath.Join(binaryDir, "node")
 

@@ -31,7 +31,7 @@ func (i *uninstallCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...inte
 		return subcommands.ExitFailure
 	}
 
-	version := normalizeVersion(args[0])
+	version := normalizeVersion(args[0]).String()
 	targetDir := filepath.Join(versionsDir, version)
 
 	if err := prepareDir(targetDir); err != nil {
