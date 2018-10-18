@@ -48,10 +48,12 @@ func main() {
 	subcommands.Register(subcommands.FlagsCommand(), "")
 	subcommands.Register(subcommands.CommandsCommand(), "")
 	subcommands.Register(subcommands.Alias("ls", &listCommand{}), "")
+	subcommands.Register(subcommands.Alias("ls-remote", &remoteCommand{}), "")
 	subcommands.Register(&installCommand{}, "")
 	subcommands.Register(&uninstallCommand{}, "")
 	subcommands.Register(&useCommand{}, "")
 	subcommands.Register(&listCommand{}, "")
+	subcommands.Register(&remoteCommand{}, "")
 	subcommands.Register(&versionCommand{}, "")
 
 	flag.Parse()
