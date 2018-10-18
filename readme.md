@@ -30,9 +30,13 @@ Uninstall Node.js <version>.
 
 Activate Node.js <version>.
 
-### `nd list`
+### `nd list` / `nd ls`
 
 Show installed Node.js versions.
+
+### `nd list-remote` / `nd ls-remote`
+
+Show installable Node.js versions.
 
 ## License
 
