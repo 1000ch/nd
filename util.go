@@ -1,17 +1,26 @@
 package main
 
 import (
-	"fmt"
 	"os"
-	"regexp"
+	"sort"
 	"strings"
+
+	"github.com/Masterminds/semver"
+	"github.com/golang/glog"
 )
 
-var semver1, semver2 *regexp.Regexp
+func unique(args []string) []string {
+	versions := []string{}
 
-func init() {
-	semver1 = regexp.MustCompile(`\d+.\d+.\d+`)
-	semver2 = regexp.MustCompile(`\d+.\d+`)
+	m := make(map[string]bool)
+	for _, v := range args {
+		if !m[v] {
+			m[v] = true
+			versions = append(versions, v)
+		}
+	}
+
+	return versions
 }
 
 func prepareDir(p string) error {
@@ -26,16 +35,25 @@ func prepareDir(p string) error {
 	return nil
 }
 
-func normalizeVersion(version string) string {
-	if semver1.MatchString(version) {
-		return fmt.Sprintf("v%s", version)
-	}
-
-	if semver2.MatchString(version) {
-		return fmt.Sprintf("v%s.0", version)
+func normalizeVersion(arg string) *semver.Version {
+	version, err := semver.NewVersion(arg)
+	if err != nil {
+		glog.Errorf("Error parsing version: %s", err)
 	}
 
 	return version
+}
+
+func normalizeVersions(args []string) []*semver.Version {
+	versions := unique(args)
+	semvers := make([]*semver.Version, len(versions))
+	for i, version := range versions {
+		semvers[i] = normalizeVersion(version)
+	}
+
+	sort.Sort(semver.Collection(semvers))
+
+	return semvers
 }
 
 func normalizeArch(goarch string) string {

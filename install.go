@@ -43,7 +43,7 @@ func (i *installCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interf
 	version := normalizeVersion(args[0])
 	platform := runtime.GOOS
 	arch := normalizeArch(runtime.GOARCH)
-	targetDir := filepath.Join(versionsDir, version)
+	targetDir := filepath.Join(versionsDir, version.String())
 	if err := prepareDir(targetDir); err != nil {
 		return subcommands.ExitFailure
 	}
