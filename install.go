@@ -10,10 +10,10 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"time"
 
+	repo "github.com/1000ch/nd/repository"
 	"github.com/briandowns/spinner"
 	"github.com/google/subcommands"
 )
@@ -35,26 +35,16 @@ func (*installCommand) Usage() string {
 func (i *installCommand) SetFlags(f *flag.FlagSet) {}
 
 func (i *installCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
-	args := f.Args()
-	if len(args) != 1 {
-		return subcommands.ExitFailure
-	}
-
-	version := normalizeVersion(args[0])
-	platform := runtime.GOOS
-	arch := normalizeArch(runtime.GOARCH)
-	targetDir := filepath.Join(versionsDir, version.String())
-	if err := prepareDir(targetDir); err != nil {
-		return subcommands.ExitFailure
-	}
-
-	fileName := fmt.Sprintf("node-%s-%s-%s.tar.gz", version, platform, arch)
-	url := fmt.Sprintf("https://nodejs.org/dist/%s/%s", version, fileName)
-
+	v := repo.NewVersion(f.Args()[0])
 	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
-	s.Suffix = fmt.Sprintf(" Downloading Node.js %s", version)
+	s.Suffix = fmt.Sprintf(" Downloading Node.js %s", v.String())
+
+	if err := prepareDir(local.NodeDir(v)); err != nil {
+		return subcommands.ExitFailure
+	}
+
 	s.Start()
-	if err := download(url, targetDir, fileName); err != nil {
+	if err := download(remote.Url(v), local.NodeDir(v)); err != nil {
 		return subcommands.ExitFailure
 	}
 	s.Stop()
@@ -62,7 +52,7 @@ func (i *installCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interf
 	return subcommands.ExitSuccess
 }
 
-func download(url string, targetDir string, fileName string) error {
+func download(url string, targetDir string) error {
 	response, err := http.Get(url)
 	if response != nil {
 		defer response.Body.Close()

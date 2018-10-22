@@ -4,8 +4,8 @@ import (
 	"context"
 	"flag"
 	"os"
-	"path/filepath"
 
+	repo "github.com/1000ch/nd/repository"
 	"github.com/google/subcommands"
 )
 
@@ -28,20 +28,13 @@ func (*useCommand) Usage() string {
 func (i *useCommand) SetFlags(f *flag.FlagSet) {}
 
 func (i *useCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
-	args := f.Args()
-	if len(args) != 1 {
+	v := repo.NewVersion(f.Args()[0])
+
+	if err := os.Remove(local.BinPath()); err != nil {
 		return subcommands.ExitFailure
 	}
 
-	version := normalizeVersion(args[0]).String()
-	symlinkTarget := filepath.Join(versionsDir, version, "bin", "node")
-	symlinkPath := filepath.Join(binaryDir, "node")
-
-	if err := os.Remove(symlinkPath); err != nil {
-		return subcommands.ExitFailure
-	}
-
-	if err := os.Symlink(symlinkTarget, symlinkPath); err != nil {
+	if err := os.Symlink(local.NodePath(v), local.BinPath()); err != nil {
 		return subcommands.ExitFailure
 	}
 

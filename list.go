@@ -27,21 +27,15 @@ func (*listCommand) Usage() string {
 func (i *listCommand) SetFlags(f *flag.FlagSet) {}
 
 func (i *listCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
-	files, err := ioutil.ReadDir(versionsDir)
+	files, err := ioutil.ReadDir(local.VersionsDir())
 	if err != nil {
 		return subcommands.ExitFailure
 	}
 
-	versions := make([]string, 0)
 	for _, file := range files {
 		if file.IsDir() {
-			versions = append(versions, file.Name())
+			fmt.Println(file.Name())
 		}
-	}
-
-	semvers := normalizeVersions(versions)
-	for _, v := range semvers {
-		fmt.Println(v)
 	}
 
 	return subcommands.ExitSuccess

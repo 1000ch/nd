@@ -5,8 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Masterminds/semver"
-	"github.com/golang/glog"
+	repo "github.com/1000ch/nd/repository"
 )
 
 func unique(args []string) []string {
@@ -35,23 +34,14 @@ func prepareDir(p string) error {
 	return nil
 }
 
-func normalizeVersion(arg string) *semver.Version {
-	version, err := semver.NewVersion(arg)
-	if err != nil {
-		glog.Errorf("Error parsing version: %s", err)
-	}
-
-	return version
-}
-
-func normalizeVersions(args []string) []*semver.Version {
+func normalizeVersions(args []string) []*repo.Version {
 	versions := unique(args)
-	semvers := make([]*semver.Version, len(versions))
+	semvers := make([]*repo.Version, len(versions))
 	for i, version := range versions {
-		semvers[i] = normalizeVersion(version)
+		semvers[i] = repo.NewVersion(version)
 	}
 
-	sort.Sort(semver.Collection(semvers))
+	sort.Sort(repo.Versions(semvers))
 
 	return semvers
 }

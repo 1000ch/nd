@@ -4,17 +4,17 @@ import (
 	"context"
 	"flag"
 	"os"
-	"path/filepath"
+	"runtime"
 
+	repo "github.com/1000ch/nd/repository"
 	"github.com/golang/glog"
 	"github.com/google/subcommands"
 	"github.com/mitchellh/go-homedir"
 )
 
 var version string
-var baseDir string
-var binaryDir string
-var versionsDir string
+var local repo.Local
+var remote repo.Remote
 
 func init() {
 	homeDir, err := homedir.Dir()
@@ -23,21 +23,20 @@ func init() {
 		os.Exit(1)
 	}
 
-	baseDir = filepath.Join(homeDir, ".nd")
-	binaryDir = filepath.Join(baseDir, "bin")
-	versionsDir = filepath.Join(baseDir, "versions")
+	local = repo.Local{homeDir}
+	remote = repo.Remote{runtime.GOOS, normalizeArch(runtime.GOARCH)}
 
-	if err := prepareDir(baseDir); err != nil {
+	if err := prepareDir(local.BaseDir()); err != nil {
 		glog.Error(err)
 		os.Exit(1)
 	}
 
-	if err := prepareDir(binaryDir); err != nil {
+	if err := prepareDir(local.BinDir()); err != nil {
 		glog.Error(err)
 		os.Exit(1)
 	}
 
-	if err := prepareDir(versionsDir); err != nil {
+	if err := prepareDir(local.VersionsDir()); err != nil {
 		glog.Error(err)
 		os.Exit(1)
 	}

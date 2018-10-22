@@ -4,8 +4,8 @@ import (
 	"context"
 	"flag"
 	"os"
-	"path/filepath"
 
+	repo "github.com/1000ch/nd/repository"
 	"github.com/google/subcommands"
 )
 
@@ -26,19 +26,13 @@ func (*uninstallCommand) Usage() string {
 func (i *uninstallCommand) SetFlags(f *flag.FlagSet) {}
 
 func (i *uninstallCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
-	args := f.Args()
-	if len(args) != 1 {
+	v := repo.NewVersion(f.Args()[0])
+
+	if err := prepareDir(local.NodeDir(v)); err != nil {
 		return subcommands.ExitFailure
 	}
 
-	version := normalizeVersion(args[0]).String()
-	targetDir := filepath.Join(versionsDir, version)
-
-	if err := prepareDir(targetDir); err != nil {
-		return subcommands.ExitFailure
-	}
-
-	if err := os.RemoveAll(targetDir); err != nil {
+	if err := os.RemoveAll(local.NodeDir(v)); err != nil {
 		return subcommands.ExitFailure
 	}
 

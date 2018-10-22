@@ -55,8 +55,8 @@ func (i *remoteCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
 	m1 := make(map[string]bool)
 	m2 := make(map[int64]bool)
 	for _, v := range semvers {
-		major := v.Major()
-		minor := v.Minor()
+		major := v.Version.Major()
+		minor := v.Version.Minor()
 		version := fmt.Sprintf("%d.%d", major, minor)
 		if major == 0 && m1[version] == false {
 			m1[version] = true
