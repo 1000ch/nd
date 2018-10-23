@@ -10,13 +10,9 @@ type Remote struct {
 }
 
 func (r *Remote) Filename(v *Version) string {
-	format := "node-%s-%s-%s.tar.gz"
-
-	return fmt.Sprintf(format, v.String(), r.Platform, r.Arch)
+	return fmt.Sprintf("node-%s-%s-%s.tar.gz", v.String(), r.Platform, r.Arch)
 }
 
-func (r *Remote) Url(v *Version) string {
-	format := "https://nodejs.org/dist/%s/%s"
-
-	return fmt.Sprintf(format, v.String(), r.Filename(v))
+func (r *Remote) URL(v *Version) string {
+	return fmt.Sprintf("https://nodejs.org/dist/%s/%s", v.String(), r.Filename(v))
 }

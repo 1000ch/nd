@@ -44,7 +44,7 @@ func (i *installCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interf
 	}
 
 	s.Start()
-	if err := download(remote.Url(v), local.NodeDir(v)); err != nil {
+	if err := download(remote.URL(v), local.NodeDir(v)); err != nil {
 		return subcommands.ExitFailure
 	}
 	s.Stop()
