@@ -1,4 +1,4 @@
-package repository
+package repo
 
 // Versions is a collection of Version instances and implements the sort
 // interface. See the sort package for more details.

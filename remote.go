@@ -2,19 +2,19 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"regexp"
+	"sort"
 
+	"github.com/1000ch/nd/repo"
 	"github.com/google/subcommands"
 )
 
-var sv *regexp.Regexp
-
-func init() {
-	sv = regexp.MustCompile(`v\d+.\d+.\d+`)
+type Node struct {
+	Version string `json:"version"`
 }
 
 type remoteCommand struct {
@@ -35,7 +35,7 @@ func (*remoteCommand) Usage() string {
 func (i *remoteCommand) SetFlags(f *flag.FlagSet) {}
 
 func (i *remoteCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
-	response, err := http.Get("https://nodejs.org/dist/")
+	response, err := http.Get("https://nodejs.org/dist/index.json")
 	if response != nil {
 		defer response.Body.Close()
 	}
@@ -48,8 +48,16 @@ func (i *remoteCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
 		return subcommands.ExitFailure
 	}
 
-	versions := sv.FindAllString(string(bytes), -1)
-	semvers := normalizeVersions(versions)
+	var nodes []Node
+	if err := json.Unmarshal(bytes, &nodes); err != nil {
+		return subcommands.ExitFailure
+	}
+
+	semvers := make([]*repo.Version, len(nodes))
+	for i, node := range nodes {
+		semvers[i] = repo.NewVersion(node.Version)
+	}
+	sort.Sort(repo.Versions(semvers))
 
 	var count int32
 	m1 := make(map[string]bool)
