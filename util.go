@@ -2,10 +2,7 @@ package main
 
 import (
 	"os"
-	"sort"
 	"strings"
-
-	repo "github.com/1000ch/nd/repository"
 )
 
 func unique(args []string) []string {
@@ -32,18 +29,6 @@ func prepareDir(p string) error {
 	}
 
 	return nil
-}
-
-func normalizeVersions(args []string) []*repo.Version {
-	versions := unique(args)
-	semvers := make([]*repo.Version, len(versions))
-	for i, version := range versions {
-		semvers[i] = repo.NewVersion(version)
-	}
-
-	sort.Sort(repo.Versions(semvers))
-
-	return semvers
 }
 
 func normalizeArch(goarch string) string {
