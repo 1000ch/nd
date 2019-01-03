@@ -5,7 +5,7 @@ import (
 	"flag"
 	"os"
 
-	repo "github.com/1000ch/nd/repository"
+	"github.com/1000ch/nd/repo"
 	"github.com/google/subcommands"
 )
 

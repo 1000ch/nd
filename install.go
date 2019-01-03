@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	repo "github.com/1000ch/nd/repository"
+	"github.com/1000ch/nd/repo"
 	"github.com/briandowns/spinner"
 	"github.com/google/subcommands"
 )

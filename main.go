@@ -6,7 +6,7 @@ import (
 	"os"
 	"runtime"
 
-	repo "github.com/1000ch/nd/repository"
+	"github.com/1000ch/nd/repo"
 	"github.com/golang/glog"
 	"github.com/google/subcommands"
 	"github.com/mitchellh/go-homedir"
